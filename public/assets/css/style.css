@@ -1,0 +1,19 @@
+.container{
+    background-color: #76d8a8;
+    box-shadow: 2px 2px 2px 1px rgba(87, 87, 87, 0.13);
+    height: 500px;
+    width: 750px;
+    border-radius: 10px;
+}
+
+.cards{
+    box-shadow: 8px 8px 2px 1px rgb(0 0 255 / 13%);
+    height:300px;
+}
+
+.btn-custom{
+    position: absolute;
+    left: 42%;
+    width: 288px;
+    margin-top: 10px;
+}

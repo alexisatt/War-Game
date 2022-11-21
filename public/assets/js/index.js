@@ -1,10 +1,10 @@
 // globals
-var player1Cards
-var player2Cards
-var p1Score = 26;
-var p2Score = 26;
+let player1Cards
+let player2Cards
+let p1Score = 26;
+let p2Score = 26;
 
-document.getElementById('player1Results').innerHTML = p1Score;
+ document.getElementById('player1Results').innerHTML = p1Score;
 document.getElementById('player2Results').innerHTML = p2Score;
 
 //Deck with ranks:
@@ -34,27 +34,54 @@ function initialize_game() {
             //  console.log(player2Cards)
 }
 
+async function updateScoreByID(obj){
+  try{
+const update =
+  await fetch(`data/${id}`, {
+  method: 'PUT',
+  headers: {
+    'Content-Type' : 'application/json'
+  },
+  body: JSON.stringify(obj)
+
+})
+const result = await update.json()
+console.log(result)
+  return result
+  } catch(err){
+    console.log(err)
+  }
+}
+
+async function getData(){
+  try{
+const update =
+  await fetch(`data`, {
+  method: 'GET',
+  headers: {
+    'Content-Type' : 'application/json'
+  }
+
+})
+const result = await update.json()
+console.log(result)
+  //return result
+  } catch(err){
+    console.log(err)
+  }
+}
 function sendScores(){
+
+
     document.getElementById('player1Results').innerHTML = p1Score;
     document.getElementById('player2Results').innerHTML = p2Score;
 
-    if (p1Score === 0){
-        console.log('player 1 lost')
-        p1Score = 26;
-        p2Score = 26;
-        start_round()
-     
-    } else if (p2Score === 0){
-        console.log('player 2 lost')
-        p1Score = 26;
-        p2Score = 26;
-        start_round()
-       
-    }
+
 }
 
 
-function start_round() {
+
+async function start_round() {
   
   //Make it random out of the 26 cards received by players:
   let card = Math.floor(Math.random() * 26)
@@ -72,12 +99,15 @@ function start_round() {
     //Player 2 Wins
     player2Cards.push(player1Cards[card])
     player1Cards.splice(player1Cards[card],1)
-
     localStorage.setItem('links', JSON.stringify(player1Cards));
 
-    p1Score--;
-    p2Score++;
+   p1Score--;
+   p2Score++;
 
+    const newScoreP1 = await updateScoreByID({score: p1Score, id: 1})
+    const newScoreP2 = await updateScoreByID({score: p2Score, id: 2})
+    const finalScore = await getData()
+    console.log(finalScore)
     sendScores()
    // console.log(JSON.stringify(player2Cards))
    
@@ -88,16 +118,21 @@ function start_round() {
     player2Cards.splice(player2Cards[card],1)
 
     localStorage.setItem('links', JSON.stringify(player1Cards));
-  
-
-    //console.log('PLAYER 1 CARD')
-   // console.log(player1Cards)
-   // console.log('PLAYER 2 CARDs')
-   // console.log(player2Cards)
 
     p1Score++;
     p2Score--;
+    const newScoreP1 = await updateScoreByID({score: p1Score, id: 1})
+    const newScoreP2 = await updateScoreByID({score: p2Score, id: 2})
+    console.groupCollapsed('player 1 wins')
+    console.log(newScoreP1)
+    console.groupEnd()
+  
+    console.groupCollapsed('player 2 wins')
+    console.log(newScoreP2)
+    console.groupEnd()
 
+    const finalScore = await getData()
+    console.log(finalScore)
     sendScores()
 
   } else {
@@ -105,12 +140,18 @@ function start_round() {
     console.log('WAR!');
     console.log(player1Cards)
     console.log(player2Cards)
-
+    const newScoreP1 = await updateScoreByID({score: p1Score, id: 1})
+    const newScoreP2 = await updateScoreByID({score: p2Score, id: 2})
+    const finalScore = await getData()
+    console.log(finalScore)
     sendScores()
 
   }
 
 }
+
+const startBtn = document.getElementById('play')
+startBtn.addEventListener('click',start_round)
 
 initialize_game();
 

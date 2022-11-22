@@ -76,7 +76,7 @@ console.log(result)
   }
 }
 
-
+//Get Ids from the DOM
 function sendScores(){
     document.getElementById('player1Results').innerHTML = p1Score;
     document.getElementById('player2Results').innerHTML = p2Score;
@@ -93,21 +93,26 @@ async function start_round() {
   let selectedCardImg = player1Cards[card].img
   document.getElementById('p1Card').src = "./images/cards/" + selectedCardImg
 
-
   //Place the image
   let selectedCardImg2 = player2Cards[card].img
   document.getElementById('p2Card').src = "./images/cards/" + selectedCardImg2
 
-  if (player1Cards[card].rank < player2Cards[card].rank) {
-  //Player 2 Wins
+  
+  if (player1Cards[card].rank < player2Cards[card].rank) {  //Player 2 Wins
+ 
+  //Take Player 1's (loser) remove card from their array and give it to player 2's (winner) array.
     player2Cards.push(player1Cards[card])
     player1Cards.splice(player1Cards[card],1)
     localStorage.setItem('links', JSON.stringify(player1Cards));
 
-   p1Score--;
-   p2Score++;
+    //Keeping track of the front end data. Subtract from p1 since they lost, add to p2 since they won.
+          p1Score--;
+          p2Score++;
+
+    //Update DOM announcement so it says P2 wins
    $("#announcement").text("Player 2 Wins");
 
+   //Update score in the database
     const newScoreP1 = await updateScoreByID({score: p1Score, id: 1})
     const newScoreP2 = await updateScoreByID({score: p2Score, id: 2})
     const finalScore = await getData()
@@ -115,7 +120,7 @@ async function start_round() {
     sendScores()
    // console.log(JSON.stringify(player2Cards))
    
-  } else if (player1Cards[card].rank > player2Cards[card].rank) {
+  } else if (player1Cards[card].rank > player2Cards[card].rank) {    //Player 1 Wins
 
     //Player 1 Wins
     player1Cards.push(player2Cards[card])
@@ -123,30 +128,24 @@ async function start_round() {
 
     localStorage.setItem('links', JSON.stringify(player1Cards));
 
+  //Keeping track of the front end data. Subtract from p2 since they lost, add to p1 since they won.
     p1Score++;
     p2Score--;
 
+  //Update DOM announcement so it says P1 wins
     $("#announcement").text("Player 1 Wins");
-
+  //Update score in the database
     const newScoreP1 = await updateScoreByID({score: p1Score, id: 1})
     const newScoreP2 = await updateScoreByID({score: p2Score, id: 2})
-    console.groupCollapsed('player 1 wins')
     console.log(newScoreP1)
-    console.groupEnd()
-  
-    console.groupCollapsed('player 2 wins')
     console.log(newScoreP2)
-    console.groupEnd()
-
     const finalScore = await getData()
     console.log(finalScore)
     sendScores()
 
-  } else {
+  } else {  //TIE console.log('WAR!');
     
-    console.log('WAR!');
     $("#announcement").text("Tie");
- 
     const newScoreP1 = await updateScoreByID({score: p1Score, id: 1})
     const newScoreP2 = await updateScoreByID({score: p2Score, id: 2})
     const finalScore = await getData()
@@ -157,6 +156,7 @@ async function start_round() {
 
 }
 
+//Find Start button on click start the round
 const startBtn = document.getElementById('play')
 startBtn.addEventListener('click',start_round)
 

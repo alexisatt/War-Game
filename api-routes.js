@@ -38,7 +38,7 @@ app.post("/data",async (req, res) => {
 app.put("/data/:id", async (req,res) => {
     console.log('body')
     console.log(req.body)
-    req.body= JSON.parse(req.body)
+    //req.body= JSON.parse(req.body)
     const {score, id} = req.body
     const data = await updateData(score, id)
     res.json(data)

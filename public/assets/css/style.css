@@ -1,7 +1,7 @@
 .container{
     background-color: #76d8a8;
     box-shadow: 2px 2px 2px 1px rgba(87, 87, 87, 0.13);
-    height: 500px;
+    height: 600px;
     width: 750px;
     border-radius: 10px;
 }
@@ -16,4 +16,9 @@
     left: 42%;
     width: 288px;
     margin-top: 10px;
+}
+
+.medieval-font{
+    font-family: 'MedievalSharp';
+    padding-top:10px;
 }

@@ -4,8 +4,11 @@ let player2Cards
 let p1Score = 26;
 let p2Score = 26;
 
- document.getElementById('player1Results').innerHTML = p1Score;
+
+
+document.getElementById('player1Results').innerHTML = p1Score;
 document.getElementById('player2Results').innerHTML = p2Score;
+
 
 //Deck with ranks:
 const starterDeck = [
@@ -34,6 +37,7 @@ function initialize_game() {
             //  console.log(player2Cards)
 }
 
+//Fetching our Data
 async function updateScoreByID(obj){
   try{
 const update =
@@ -45,6 +49,7 @@ const update =
   body: JSON.stringify(obj)
 
 })
+
 const result = await update.json()
 console.log(result)
   return result
@@ -103,6 +108,7 @@ async function start_round() {
 
    p1Score--;
    p2Score++;
+   $("#announcement").text("Player 2 Number of Cards:");
 
     const newScoreP1 = await updateScoreByID({score: p1Score, id: 1})
     const newScoreP2 = await updateScoreByID({score: p2Score, id: 2})
@@ -121,6 +127,9 @@ async function start_round() {
 
     p1Score++;
     p2Score--;
+
+    $("#announcement").text("Player 1 Number of Cards:");
+
     const newScoreP1 = await updateScoreByID({score: p1Score, id: 1})
     const newScoreP2 = await updateScoreByID({score: p2Score, id: 2})
     console.groupCollapsed('player 1 wins')
@@ -136,10 +145,10 @@ async function start_round() {
     sendScores()
 
   } else {
-    // alert("TIE!")
+    
     console.log('WAR!');
-    console.log(player1Cards)
-    console.log(player2Cards)
+    $("#announcement").text("Tie");
+ 
     const newScoreP1 = await updateScoreByID({score: p1Score, id: 1})
     const newScoreP2 = await updateScoreByID({score: p2Score, id: 2})
     const finalScore = await getData()

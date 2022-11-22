@@ -18,15 +18,12 @@ app.use(express.static("public/assets"));
 
 // HTML Routes
 
-app.get('/', (req,res)=> {
+app.get('/start', (req,res)=> {
     res.sendFile(path.join(__dirname, "./public/assets/start.html"));
-})
+});
 app.get('/war', (req,res)=> {
     res.sendFile(path.join(__dirname, "./public/assets/index.html"));
-})
-app.get('/score', (req,res)=> {
-    res.sendFile(path.join(__dirname, "./public/assets/finalScore.html"));
-})
+});
 
 // Data
 app.get("/data", async (req,res)=> {
